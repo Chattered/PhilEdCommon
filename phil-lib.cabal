@@ -1,0 +1,15 @@
+name:           phil-lib
+version:        0.0
+Description:    Various utilities
+License:        GPL
+Author:         Phil Scott
+Cabal-version:  >=1.2
+build-type:     Simple
+
+library
+        Build-depends: base, array, containers, mtl
+        Exposed-modules: Philed.Control.Monad, Philed.Data.Bag
+                       , Philed.Data.Forest, Philed.Data.ListExtra
+                       , Philed.Data.Nat, Philed.Data.Pos, Philed.Data.UnionFind
+                       , Philed.Data.Vector
+                       , Philed.Text.PPrint
