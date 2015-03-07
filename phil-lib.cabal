@@ -8,7 +8,7 @@ build-type:     Simple
 
 library
         Build-depends: base, array, containers, mtl, semigroups
-        Exposed-modules: Philed.Control.Monad, Philed.Control.MonadError
+        Exposed-modules: Philed.Control.Monad, Philed.Control.Monad.Error
                        , Philed.Control.Monad.Record
                        , Philed.Data.Bag, Philed.Data.Foldable
                        , Philed.Data.Forest, Philed.Data.List, Philed.Data.Monoid
