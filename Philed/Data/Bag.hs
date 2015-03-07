@@ -1,6 +1,7 @@
 module Philed.Data.Bag (Bag
                        ,empty
-                       ,singleton,insert,delete,deleteAll,member
+                       ,singleton,insert,delete,deleteAll
+                       ,member,find
                        ,union,difference,subBagOf
                        ,fromList, toList
                        ,all, filter) where
@@ -10,7 +11,7 @@ import Philed.Data.Pos
 import qualified Data.Map as M
 import Prelude hiding (all, filter)
 
-newtype Bag a = Bag (M.Map a (Pos Int))
+newtype Bag a = Bag (M.Map a (Pos Int)) deriving (Eq,Ord)
 
 empty :: Bag a
 empty = Bag $ M.empty
@@ -27,8 +28,11 @@ union (Bag m1) (Bag m2) = Bag (M.unionWith add m1 m2)
 delete :: Ord a => a -> Bag a -> Bag a
 delete x (Bag m) = Bag (M.update (`sub` one) x m)
 
-deleteAll :: Ord a => a -> Bag a -> Bag a
-deleteAll x (Bag m) = Bag (M.delete x m)
+find :: Ord a => (a -> Bool) -> Bag a -> Maybe a
+find p (Bag m) = fmap (fst.fst) $ M.minViewWithKey $ M.filterWithKey (const . p ) m
+
+deleteAll :: Ord a => Bag a -> a -> Bag a
+deleteAll (Bag m) x = Bag (M.delete x m)
 
 difference :: Ord a => Bag a -> Bag a -> Bag a
 difference (Bag m1) (Bag m2) = Bag (M.differenceWith sub m1 m2)

@@ -1,41 +1,27 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+module Philed.Text.PPrint (PPrint,line,window,render) where
 
-module Philed.Text.PPrint (PPrint,write,line,window,render) where
+import Data.Char
+import Data.Monoid
+import Data.String
 
-import Control.Monad.State
-import Control.Monad.Writer
+newtype PPrint = PPrint { runPP :: Int -> String }
 
-newtype DiffList a = DiffList { runDiffList :: [a] -> [a] }
+instance Monoid PPrint where
+  mempty      = PPrint (const "")
+  mappend l r = PPrint (\i -> runPP l i ++ runPP r i)
 
-unDiffList :: DiffList a -> [a]
-unDiffList xs = runDiffList xs []
+instance IsString PPrint where
+  fromString str = PPrint (const str)
 
-diffList :: [a] -> DiffList a
-diffList xs = DiffList (++ xs)
+line :: PPrint
+line = PPrint (\i -> "\n" ++ replicate i ' ')
 
-instance Monoid (DiffList a) where
-  mempty        = DiffList id
-  mappend xs ys = DiffList (runDiffList ys . runDiffList xs)
+window :: PPrint -> PPrint
+window pp = PPrint (\i -> runPP pp (i + 2))
 
-newtype PPrint a = PPrint { runPP :: StateT Int (Writer (DiffList Char)) a }
-                 deriving (Monad, MonadState Int, MonadWriter (DiffList Char))
+shrinkWhiteLine :: String -> String
+shrinkWhiteLine l | all isSpace l = ""
+                  | otherwise     = l
 
-write :: String -> PPrint ()
-write = tell . diffList
-
-line :: PPrint ()
-line = do
-  write "\n"
-  i <- get
-  write (replicate i ' ')
-
-window :: PPrint a -> PPrint a
-window s = do
-  i <- get
-  put (i+2)
-  x <- s
-  put i
-  return x
-
-render :: PPrint () -> String
-render s = unDiffList $ execWriter (evalStateT (runPP s) 0)
+render :: PPrint -> String
+render pp = unlines $ map shrinkWhiteLine $ lines (runPP pp 0)
