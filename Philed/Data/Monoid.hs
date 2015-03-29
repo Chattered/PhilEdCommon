@@ -1,4 +1,3 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving, DeriveTraversable #-}
 module Philed.Data.Monoid where
 
 import Data.Function
@@ -6,11 +5,13 @@ import Data.Monoid
 import Philed.Data.NNeg
 import Prelude hiding (pred)
 
--- | Recursive definition of natural number multiplication
+-- | Recursive definitions of natural number multiplication
+multiplyN :: Monoid m => N -> m -> m
+multiplyN Z     _ = mempty
+multiplyN (S n) x = x `mappend` multiplyN n x
+
 multiply :: (Integral a, Monoid m) => NNeg a -> m -> m
-multiply n x = case pred n of
-                Nothing -> mempty
-                Just p  -> x `mappend` multiply p x
+multiply n = (toN n `multiplyN`)
 
 multiplyInf :: Monoid m => m -> m
 multiplyInf x = fix (x `mappend`)

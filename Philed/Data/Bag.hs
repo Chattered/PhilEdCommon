@@ -17,13 +17,13 @@ empty :: Bag a
 empty = Bag $ M.empty
 
 insert :: Ord a => a -> Bag a -> Bag a
-insert x (Bag m) = Bag (M.insertWith add x one m)
+insert x (Bag m) = Bag (M.insertWith plus x one m)
 
 singleton :: a -> Bag a
-singleton x = Bag (M.singleton x (Pos 1))
+singleton x = Bag (M.singleton x one)
 
 union :: Ord a => Bag a -> Bag a -> Bag a
-union (Bag m1) (Bag m2) = Bag (M.unionWith add m1 m2)
+union (Bag m1) (Bag m2) = Bag (M.unionWith plus m1 m2)
 
 delete :: Ord a => a -> Bag a -> Bag a
 delete x (Bag m) = Bag (M.update (`sub` one) x m)
@@ -47,7 +47,7 @@ fromList :: Ord a => [a] -> Bag a
 fromList xs = foldr insert empty xs
 
 toList :: Ord a => Bag a -> [(a,Int)]
-toList (Bag m) = map (\(x,Pos n) -> (x,n)) $ M.toList m
+toList (Bag m) = map (\(x,n) -> (x,extract n)) $ M.toList m
 
 all :: (a -> Bool) -> Bag a -> Bool
 all p (Bag m) = M.foldl (&&) True (M.mapWithKey (fmap p . const) m)

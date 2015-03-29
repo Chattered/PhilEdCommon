@@ -7,11 +7,21 @@ Cabal-version:  >=1.2
 build-type:     Simple
 
 library
-        Build-depends: base, array, containers, mtl, semigroups
+        Build-depends: array
+                     , base
+                     , comonad
+                     , containers
+                     , mmorph
+                     , mtl
+                     , parsec
+                     , semigroups
+                     , semigroupoids
+                     , transformers >= 0.4.2.0
         Exposed-modules: Philed.Control.Monad, Philed.Control.Monad.Error
                        , Philed.Control.Monad.Record
                        , Philed.Data.Bag, Philed.Data.Foldable
-                       , Philed.Data.Forest, Philed.Data.List, Philed.Data.Monoid
-                       , Philed.Data.NNeg, Philed.Data.Pos, Philed.Data.Rect
+                       , Philed.Data.Forest, Philed.Data.List, Philed.Data.ListZipper
+                       , Philed.Data.Monoid, Philed.Data.NNeg, Philed.Data.Pos
+                       , Philed.Data.Rect, Philed.Text.Parsec
                        , Philed.Data.UnionFind, Philed.Data.Vector
                        , Philed.Text.PPrint
