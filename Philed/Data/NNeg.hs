@@ -1,12 +1,15 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Philed.Data.NNeg (NNeg, N(..)
                         ,isZero, zero, suc, pred, predN
-                        ,plus, plusN, sub, subN, times, timesN, abs, extract, fromNum
+                        ,plus, plusN, sub, subN, times, timesN, abs, extract
+                        ,fromNum, fromWord, fromWord8, fromWord16, fromWord32
+                        ,fromWord64
                         ,fromN, toN
                         ,SumNNeg(..), ProdNNeg(..)
                         ,length, lengthN, lookup, lookupN) where
 
 import Control.Monad
+import Data.Binary
 import Data.Foldable hiding (length)
 import Data.Functor.Identity
 import Data.List (genericDrop)
@@ -59,6 +62,21 @@ timesN m (S n) = (m `timesN` n) `plusN` m
 abs :: Num a => a -> NNeg a
 abs x = NNeg . P.abs $ x
 
+fromWord :: Word -> NNeg Word
+fromWord = NNeg
+
+fromWord8 :: Word8 -> NNeg Word8
+fromWord8 = NNeg
+
+fromWord16 :: Word16 -> NNeg Word16
+fromWord16 = NNeg
+
+fromWord32 :: Word32 -> NNeg Word32
+fromWord32 = NNeg
+
+fromWord64 :: Word64 -> NNeg Word64
+fromWord64 = NNeg
+
 fromNum :: (Num a, Ord a) => a -> Maybe (NNeg a)
 fromNum x = if x >= 0 then pure (NNeg x) else mzero
 
@@ -99,7 +117,7 @@ instance Monoid ProdN where
 lengthN :: Foldable f => f a -> N
 lengthN = getSumN . foldMap (const $ SumN (S Z))
 
-length :: (Integral a, Foldable f) => f a -> NNeg a
+length :: (Integral a, Foldable f) => f b -> NNeg a
 length = fromN . lengthN
 
 lookupN :: [a] -> N -> Maybe a
@@ -109,3 +127,7 @@ lookupN _ _          = mzero
 
 lookup :: Integral b => [a] -> NNeg b -> Maybe a
 lookup xs = lookupN xs . toN
+
+instance Binary a => Binary (NNeg a) where
+  put (NNeg x) = put x
+  get = NNeg <$> get
