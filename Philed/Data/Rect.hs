@@ -3,6 +3,8 @@ module Philed.Data.Rect (Rect,
                          topLeft, topRight, bottomLeft, bottomRight,
                          width, height, mkRect) where
 
+import Control.Applicative
+import Data.Binary
 import Philed.Data.Vector
 import Philed.Data.NNeg
 
@@ -21,13 +23,17 @@ bottom :: Num a => Rect a -> a
 bottom = snd . bottomLeft
 
 topLeft :: Num a => Rect a -> Vec a
-topLeft r = bottomLeft r +. (0, toNum $ height r)
+topLeft r = bottomLeft r +. (0, extract $ height r)
 
 bottomRight :: Num a => Rect a -> Vec a
-bottomRight r = bottomLeft r +. (toNum $ width r, 0)
+bottomRight r = bottomLeft r +. (extract $ width r, 0)
 
 topRight :: Num a => Rect a -> Vec a
-topRight r = topRight r +. (toNum $ width r, toNum $ height r)
+topRight r = topRight r +. (extract $ width r, extract $ height r)
 
 mkRect :: Num a => Vec a -> NNeg a -> NNeg a -> Rect a
 mkRect = Rect
+
+instance Binary a => Binary (Rect a) where
+  put (Rect bl w h) = put bl >> put w >> put h
+  get = liftA3 Rect get get get
