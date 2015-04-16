@@ -9,6 +9,7 @@ build-type:     Simple
 library
         Build-depends: array
                      , base
+                     , binary
                      , comonad
                      , containers
                      , mmorph
@@ -18,10 +19,10 @@ library
                      , semigroupoids
                      , transformers >= 0.4.2.0
         Exposed-modules: Philed.Control.Monad, Philed.Control.Monad.Error
-                       , Philed.Control.Monad.Record
+                       , Philed.Control.Monad.Record, Philed.Control.Monad.Stream
                        , Philed.Data.Bag, Philed.Data.Foldable
                        , Philed.Data.Forest, Philed.Data.List, Philed.Data.ListZipper
                        , Philed.Data.Monoid, Philed.Data.NNeg, Philed.Data.Pos
-                       , Philed.Data.Rect, Philed.Text.Parsec
+                       , Philed.Data.Rect, Philed.Text.Parsec, Philed.Data.Semigroup
                        , Philed.Data.UnionFind, Philed.Data.Vector
                        , Philed.Text.PPrint
