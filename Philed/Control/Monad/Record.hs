@@ -13,7 +13,7 @@ import Control.Monad.Reader
 import qualified Control.Monad.State as S
 import Data.Monoid
 
-class MonadRecord s m | m -> s where
+class Monad m => MonadRecord s m | m -> s where
   record :: s -> m ()
   get    :: m s
 
@@ -44,6 +44,14 @@ instance (Monad m, MonadError e m) => MonadError e (RecordT s m) where
 instance (Monad m, S.MonadState s m) => S.MonadState s (RecordT t m) where
   get = lift S.get
   put = lift . S.put
+
+instance MonadPlus m => Alternative (RecordT s m) where
+  empty = lift mzero
+  (<|>) x y = RecordT (unRecordT x <|> unRecordT y)
+
+instance MonadPlus m => MonadPlus (RecordT s m) where
+  mzero = empty
+  mplus = (<|>)
 
 instance (Monad m, MonadReader r m) => MonadReader r (RecordT e m) where
   ask                 = lift ask
