@@ -2,8 +2,8 @@
 module Philed.Data.NNeg (NNeg, N(..)
                         ,isZero, zero, suc, pred, predN
                         ,plus, plusN, sub, subN, times, timesN, abs, extract
-                        ,fromNum, fromWord, fromWord8, fromWord16, fromWord32
-                        ,fromWord64
+                        ,fromPos, fromNum, fromWord, fromWord8, fromWord16
+                        ,fromWord32, fromWord64
                         ,fromN, toN
                         ,SumNNeg(..), ProdNNeg(..)
                         ,length, lengthN, lookup, lookupN) where
@@ -15,8 +15,10 @@ import Data.Functor.Identity
 import Data.List (genericDrop)
 import Data.Maybe
 import Data.Monoid hiding (getSum)
+import qualified Philed.Data.Pos as Pos
 import qualified Prelude as P
 import Prelude hiding (abs, length, lookup, pred)
+import Test.QuickCheck.Arbitrary
 
 newtype NNeg a = NNeg a deriving (Eq, Ord, Show)
 data N = Z | S N
@@ -80,6 +82,9 @@ fromWord64 = NNeg
 fromNum :: (Num a, Ord a) => a -> Maybe (NNeg a)
 fromNum x = if x >= 0 then pure (NNeg x) else mzero
 
+fromPos :: Num a => Pos.Pos a -> NNeg a
+fromPos p = NNeg (Pos.extract p)
+
 extract :: Num a => NNeg a -> a
 extract (NNeg x) = x
 
@@ -131,3 +136,9 @@ lookup xs = lookupN xs . toN
 instance Binary a => Binary (NNeg a) where
   put (NNeg x) = put x
   get = NNeg <$> get
+
+instance Arbitrary a => Arbitrary (NNeg a) where
+  arbitrary = liftM NNeg arbitrary
+
+instance CoArbitrary a => CoArbitrary (NNeg a) where
+  coarbitrary (NNeg n) = coarbitrary n

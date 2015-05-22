@@ -15,6 +15,7 @@ library
                      , mmorph
                      , mtl
                      , parsec
+                     , QuickCheck
                      , semigroups
                      , semigroupoids
                      , transformers >= 0.4.2.0
@@ -24,5 +25,6 @@ library
                        , Philed.Data.Forest, Philed.Data.List, Philed.Data.ListZipper
                        , Philed.Data.Monoid, Philed.Data.NNeg, Philed.Data.Pos
                        , Philed.Data.Rect, Philed.Text.Parsec, Philed.Data.Semigroup
+                       , Philed.Data.SortedList, Philed.Data.SortedListMap
                        , Philed.Data.UnionFind, Philed.Data.Vector
                        , Philed.Text.PPrint

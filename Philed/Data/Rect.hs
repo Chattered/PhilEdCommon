@@ -7,8 +7,10 @@ import Control.Applicative
 import Data.Binary
 import Philed.Data.Vector
 import Philed.Data.NNeg
+import Test.QuickCheck.Arbitrary
 
 data Rect a = Rect { bottomLeft :: Vec a, width :: NNeg a, height :: NNeg a }
+            deriving (Eq, Ord, Show)
 
 left :: Num a => Rect a -> a
 left = fst . bottomLeft
@@ -29,7 +31,7 @@ bottomRight :: Num a => Rect a -> Vec a
 bottomRight r = bottomLeft r +. (extract $ width r, 0)
 
 topRight :: Num a => Rect a -> Vec a
-topRight r = topRight r +. (extract $ width r, extract $ height r)
+topRight r = bottomLeft r +. (extract $ width r, extract $ height r)
 
 mkRect :: Num a => Vec a -> NNeg a -> NNeg a -> Rect a
 mkRect = Rect
@@ -37,3 +39,9 @@ mkRect = Rect
 instance Binary a => Binary (Rect a) where
   put (Rect bl w h) = put bl >> put w >> put h
   get = liftA3 Rect get get get
+
+instance Arbitrary a => Arbitrary (Rect a) where
+  arbitrary = Rect <$> arbitrary <*> arbitrary <*> arbitrary
+
+instance CoArbitrary a => CoArbitrary (Rect a) where
+  coarbitrary (Rect (x,y) w h) = coarbitrary ((x,y),w,h)

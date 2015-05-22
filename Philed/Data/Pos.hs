@@ -9,6 +9,7 @@ import Control.Monad
 import Data.Semigroup
 import Data.Semigroup.Foldable
 import Prelude hiding (length, pred)
+import Test.QuickCheck.Arbitrary
 
 newtype Pos a = Pos a deriving (Eq,Ord,Show)
 data P = SZ | S P
@@ -90,3 +91,9 @@ lengthP = getSumP . foldMap1 (const $ SumP SZ)
 
 length :: (Integral a, Foldable1 f) => f a -> Pos a
 length = fromP . lengthP
+
+instance Arbitrary a => Arbitrary (Pos a) where
+  arbitrary = liftM Pos arbitrary
+
+instance CoArbitrary a => CoArbitrary (Pos a) where
+  coarbitrary (Pos n) = coarbitrary n

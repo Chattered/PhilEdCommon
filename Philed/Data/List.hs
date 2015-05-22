@@ -9,3 +9,7 @@ dropToLast :: [a] -> [a]
 dropToLast []  = []
 dropToLast [x] = [x]
 dropToLast (_:xs) = dropToLast xs
+
+zipWithStrict :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWithStrict _ [] []         = []
+zipWithStrict f (x:xs) (y:ys) = f x y : zipWithStrict f xs ys
