@@ -10,6 +10,7 @@ module Philed.Control.Monad.Record (RecordT, runRecordT, evalRecordT, execRecord
 import Control.Applicative
 import Control.Monad.Except
 import Control.Monad.Reader
+import Control.Monad.Writer
 import qualified Control.Monad.State as S
 import Data.Monoid
 
@@ -56,6 +57,11 @@ instance MonadPlus m => MonadPlus (RecordT s m) where
 instance (Monad m, MonadReader r m) => MonadReader r (RecordT e m) where
   ask                 = lift ask
   local f (RecordT s) = RecordT (local f s)
+
+instance (Monad m, MonadWriter w m) => MonadWriter w (RecordT e m) where
+  tell               = lift . tell
+  listen (RecordT s) = RecordT (listen s)
+  pass   (RecordT s) = RecordT (pass s)
 
 instance (Monad m, MonadRecord s m) => MonadRecord s (ExceptT e m) where
   record = lift . record
