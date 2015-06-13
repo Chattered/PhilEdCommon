@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Philed.Data.NNeg (NNeg, N(..)
-                        ,isZero, zero, suc, pred, predN
+                        ,isZero, zero, one, suc, pred, predN
                         ,plus, plusN, sub, subN, times, timesN, abs, extract
                         ,fromPos, fromNum, fromWord, fromWord8, fromWord16
                         ,fromWord32, fromWord64
@@ -21,7 +21,7 @@ import Prelude hiding (abs, length, lookup, pred)
 import Test.QuickCheck.Arbitrary
 
 newtype NNeg a = NNeg a deriving (Eq, Ord, Show)
-data N = Z | S N
+data N = Z | S N deriving (Eq, Ord)
 
 isZero :: (Eq a, Num a) => NNeg a -> Bool
 isZero (NNeg x) = x == 0
@@ -98,7 +98,9 @@ fromN Z     = NNeg 0
 fromN (S n) = suc (fromN n)
 
 newtype SumNNeg a = SumNNeg { getSum  :: NNeg a }
+                  deriving (Eq, Ord, Show)
 newtype SumN      = SumN    { getSumN :: N }
+                  deriving (Eq, Ord)
 
 instance Num a => Monoid (SumNNeg a) where
   mempty                          = SumNNeg zero
@@ -142,3 +144,6 @@ instance Arbitrary a => Arbitrary (NNeg a) where
 
 instance CoArbitrary a => CoArbitrary (NNeg a) where
   coarbitrary (NNeg n) = coarbitrary n
+
+one :: Num a => NNeg a
+one = NNeg 1

@@ -18,7 +18,6 @@ class Monad m => MonadRecord s m | m -> s where
   record :: s -> m ()
   get    :: m s
 
--- RecordT adds on the right be default.
 newtype RecordT s m a = RecordT { unRecordT :: S.StateT s m a }
                       deriving (Applicative, Functor, Monad)
 
