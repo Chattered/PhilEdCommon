@@ -16,9 +16,9 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     Philed.Control.Monad, Philed.Control.Monad.Error, Philed.Control.Monad.Stream, Philed.Control.Monad.Record, Philed.Text.Parsec, Philed.Text.PPrint, Philed.Data.NNeg, Philed.Data.UnionFind, Philed.Data.Monoid, Philed.Data.List, Philed.Data.SortedList, Philed.Data.Vector, Philed.Data.Rect, Philed.Data.Pos, Philed.Data.Bag, Philed.Data.SortedListMap, Philed.Data.ListZipper, Philed.Data.Semigroup, Philed.Data.Foldable, Philed.Data.Forest
+  exposed-modules:     Philed.Control.Monad, Philed.Control.Monad.Error, Philed.Control.Monad.Record, Philed.Control.Monad.Stream, Philed.Control.Monad.Trans.Free, Philed.Text.Parsec, Philed.Text.PPrint, Philed.Data.NNeg, Philed.Data.UnionFind, Philed.Data.Monoid, Philed.Data.List, Philed.Data.SortedList, Philed.Data.Vector, Philed.Data.Rect, Philed.Data.Pos, Philed.Data.Bag, Philed.Data.SortedListMap, Philed.Data.ListZipper, Philed.Data.Semigroup, Philed.Data.Foldable, Philed.Data.Forest
   -- other-modules:       
   other-extensions:    FunctionalDependencies, MultiParamTypeClasses, GeneralizedNewtypeDeriving, FlexibleInstances, UndecidableInstances, FlexibleContexts, Rank2Types, DeriveFunctor
-  build-depends:       base >=4.8 && <4.9, mtl >=2.2 && <2.3, semigroups >=0.16 && <0.17, semigroupoids >=4.3 && <4.4, parsec >=3.1 && <3.2, binary >=0.7 && <0.8, QuickCheck >=2.7 && <2.8, array >=0.5 && <0.6, containers >=0.5 && <0.6, comonad >=4.2 && <4.3
+  build-depends:       base, free, mtl, semigroups, semigroupoids, parsec, binary, QuickCheck, array, containers, comonad
   -- hs-source-dirs:      
   default-language:    Haskell2010

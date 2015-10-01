@@ -23,8 +23,9 @@ fallbacks x fs = getElse $ sconcat (Else x :| map Else fs)
 finally :: MonadError e m => m a -> m b -> m b
 finally x y = (x `catchError` (\e -> y >> throwError e)) >> y
 
-unfoldM :: (MonadError e m, Semigroup w) => (a -> m (a,w)) -> a -> m w
-unfoldM f x = f x >>= (\(y,w) -> liftM (w <>) (unfoldM f y) `orElse` return w)
+unfoldM :: (MonadError e m, Semigroup w) => (a -> m (a,w)) -> a -> m (a,w)
+unfoldM f x =
+  f x >>= (\(y,w) -> (fmap.fmap) (w <>) (unfoldM f y) `orElse` return (x,w))
 
 tryM :: MonadError e m => (a -> m a) -> a -> m a
 tryM f x = f x `orElse` return x

@@ -1,8 +1,8 @@
 {-# LANGUAGE DeriveFunctor #-}
 
-module Philed.Data.ListZipper (ZipperT, Zipper
-                              ,leftsT, rightsT, fromNonEmptyT, toNonEmptyT
-                              ,fromNonEmpty,  toNonEmpty) where
+module Philed.Data.ListZipper (ZipperT(..), Zipper
+                              ,leftsT, rightsT, fromNonEmptyT, toNonEmptyT, replaceT
+                              ,fromNonEmpty,  toNonEmpty, replace) where
 
 import Control.Applicative
 import Control.Monad
@@ -69,16 +69,22 @@ rightsT (ZipperT _ _ [])         = []
 rightsT (ZipperT lws wx (rw:rws)) =
   let c = ZipperT (wx:lws) rw rws in c : rightsT c
 
-fromNonEmptyT :: NE.NonEmpty (w a)-> ZipperT w a
-fromNonEmptyT (x :| xs) = ZipperT [] x xs
+fromNonEmptyT :: NE.NonEmpty (w a)-> [ZipperT w a]
+fromNonEmptyT (x :| xs) = let left = ZipperT [] x xs in rightsT left
 
 toNonEmptyT :: ZipperT w a -> NE.NonEmpty (w a)
 toNonEmptyT (ZipperT ls x rs) = foldl (flip (<|)) (x :| rs) ls
 
 type Zipper = ZipperT Identity
 
-fromNonEmpty :: NE.NonEmpty a-> Zipper a
+fromNonEmpty :: NE.NonEmpty a-> [Zipper a]
 fromNonEmpty = fromNonEmptyT . fmap Identity
 
 toNonEmpty :: Zipper a -> NE.NonEmpty a
 toNonEmpty = fmap runIdentity . toNonEmptyT
+
+replaceT :: (w a -> w a) -> ZipperT w a -> ZipperT w a
+replaceT f (ZipperT lws wx rws) = ZipperT lws (f wx) rws
+
+replace :: (a -> a) -> Zipper a -> Zipper a
+replace f = replaceT (Identity . f . runIdentity)

@@ -3,7 +3,7 @@
 }:
 let
   env = haskellngPackages.ghcWithPackages (p: with p; [
-    array base binary comonad containers dlist mtl parsec QuickCheck
+    array base binary comonad containers dlist free mtl parsec QuickCheck
     semigroups semigroupoids cabal-install
   ]);
 in pkgs.stdenv.mkDerivation {

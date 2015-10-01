@@ -20,3 +20,8 @@ repeatUntilM :: Monad m => m Bool -> m () -> m ()
 repeatUntilM cond x = do
   b <- cond
   if b then return () else x >> repeatUntilM cond x
+
+accumulateM :: MonadPlus m => (a -> m a) -> a -> m a
+accumulateM f x = do
+  y <- f x
+  return y `mplus` accumulateM f y
