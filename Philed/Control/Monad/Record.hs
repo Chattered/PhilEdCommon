@@ -1,5 +1,8 @@
-{-# LANGUAGE FunctionalDependencies, MultiParamTypeClasses,
-             GeneralizedNewtypeDeriving, FlexibleInstances, UndecidableInstances #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 -- A weaker version of State, where updates are restricted to addition for some
 -- monoid.
