@@ -6,6 +6,8 @@ import Control.Monad.Error.Class
 import Data.List.NonEmpty (NonEmpty((:|)))
 import Data.Semigroup
 
+import Philed.Data.Monoid (multiplyInf)
+
 isDefined :: MonadError e m => m a -> m Bool
 isDefined x = liftM (const True) x `catchError` (const $ return False)
 
@@ -23,9 +25,13 @@ fallbacks x fs = getElse $ sconcat (Else x :| map Else fs)
 finally :: MonadError e m => m a -> m b -> m b
 finally x y = (x `catchError` (\e -> y >> throwError e)) >> y
 
-unfoldM :: (MonadError e m, Semigroup w) => (a -> m (a,w)) -> a -> m (a,w)
-unfoldM f x = f x >>= loop
+loopCollectM :: (MonadError e m, Semigroup w) => (a -> m (a,w)) -> a -> m (a,w)
+loopCollectM f x = f x >>= loop
   where loop (x,w) = (f x >>= \(y,w') -> loop (y, w <> w')) `orElse` return (x,w)
+
+collectM :: (MonadError e m, Semigroup w) => m w -> m w
+collectM x = x >>= loop
+  where loop w = (x >>= loop . (w <>)) `orElse` return w
 
 tryM :: MonadError e m => (a -> m a) -> a -> m a
 tryM f x = f x `orElse` return x
@@ -40,7 +46,7 @@ instance MonadError e m => Monoid (Try e m a) where
   mappend (Try f) (Try g) = Try (f `andTry` g)
 
 spinM :: MonadError e m => (a -> m a) -> a -> m a
-spinM f = f `andTry` spinM f
+spinM = runTry . multiplyInf . Try
 
 viewError :: MonadError e m => m a -> m (Either e a)
 viewError x = liftM Right x `catchError` (return . Left)
