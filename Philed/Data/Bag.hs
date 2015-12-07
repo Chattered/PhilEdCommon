@@ -1,8 +1,7 @@
 module Philed.Data.Bag (Bag
-                       ,empty
                        ,singleton,insert,delete,deleteAll
                        ,member,find
-                       ,union,difference,subBagOf
+                       ,difference,subBagOf
                        ,fromList, toList
                        ,all, filter) where
 
@@ -13,17 +12,15 @@ import Prelude hiding (all, filter)
 
 newtype Bag a = Bag (M.Map a (Pos Int)) deriving (Eq,Ord)
 
-empty :: Bag a
-empty = Bag $ M.empty
+instance Ord a => Monoid (Bag a) where
+  mempty = Bag M.empty
+  mappend (Bag m1) (Bag m2) = Bag (M.unionWith plus m1 m2)
 
 insert :: Ord a => a -> Bag a -> Bag a
 insert x (Bag m) = Bag (M.insertWith plus x one m)
 
 singleton :: a -> Bag a
 singleton x = Bag (M.singleton x one)
-
-union :: Ord a => Bag a -> Bag a -> Bag a
-union (Bag m1) (Bag m2) = Bag (M.unionWith plus m1 m2)
 
 delete :: Ord a => a -> Bag a -> Bag a
 delete x (Bag m) = Bag (M.update (`sub` one) x m)
@@ -44,7 +41,7 @@ subBagOf :: Ord a => Bag a -> Bag a -> Bool
 subBagOf (Bag m) (Bag n) = M.isSubmapOfBy (<=) m n
 
 fromList :: Ord a => [a] -> Bag a
-fromList xs = foldr insert empty xs
+fromList xs = foldr insert mempty xs
 
 toList :: Ord a => Bag a -> [(a,Int)]
 toList (Bag m) = map (\(x,n) -> (x,extract n)) $ M.toList m
