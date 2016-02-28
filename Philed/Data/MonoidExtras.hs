@@ -15,3 +15,10 @@ multiply n = (toN n `multiplyN`)
 
 multiplyInf :: Monoid m => m -> m
 multiplyInf x = fix (x <>)
+
+newtype EndoK m a = EndoK { runEndoK :: a -> m a }
+
+instance Monad m => Monoid (EndoK m a) where
+  mempty                      = EndoK pure
+  mappend (EndoK f) (EndoK g) = EndoK h
+    where h x = f x >>= g
