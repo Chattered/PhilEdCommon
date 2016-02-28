@@ -1,12 +1,15 @@
-module Philed.Control.Monad.Error where
+{-# LANGUAGE UndecidableInstances #-}
+
+module Philed.Control.Monad.ExceptExtras where
 
 import Control.Monad.Reader
 import Control.Monad
-import Control.Monad.Error.Class
+import Control.Monad.Except
 import Data.List.NonEmpty (NonEmpty((:|)))
 import Data.Semigroup
 
 import Philed.Data.Monoid (multiplyInf)
+import Philed.Control.Monad.Record
 
 isDefined :: MonadError e m => m a -> m Bool
 isDefined x = liftM (const True) x `catchError` (const $ return False)
