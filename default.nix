@@ -1,12 +1,16 @@
-{ haskellngPackages ? (import <nixpkgs> {}).haskellngPackages,
-  pkgs ? (import <nixpkgs> {}).pkgs
+{ pkgs ? (import <nixpkgs> {}).pkgs
 }:
 let
-  env = haskellngPackages.ghcWithPackages (p: with p; [
-    array base binary comonad containers dlist free mtl parsec QuickCheck
-    semigroups semigroupoids cabal-install
-  ]);
-in pkgs.stdenv.mkDerivation {
+   myemacs =
+     with pkgs.emacsPackages; emacsWithImageMagick.emacsWithPackages
+             [ haskellMode magit emacsw3m ];
+   myhaskell =
+     pkgs.haskellPackages.ghcWithPackages (p: with p; [
+        array base binary comonad containers dlist free mtl parsec QuickCheck
+        semigroups semigroupoids cabal-install
+    ]);
+in with pkgs; stdenv.mkDerivation {
   name = "Philed";
-  buildInputs = [ env ];
+  buildInputs = [ myhaskell ];
 }
+#TODO: Dependency on which should be made runtime.
