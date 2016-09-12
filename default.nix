@@ -2,15 +2,13 @@
 }:
 let
    myemacs =
-     with pkgs.emacsPackages; emacsWithImageMagick.emacsWithPackages
-             [ haskellMode magit emacsw3m ];
+     with pkgs.emacsPackages; with pkgs.emacsPackagesNg; pkgs.emacsWithPackages
+      [ ghc-mod haskellMode magit helm-projectile ];
    myhaskell =
      pkgs.haskellPackages.ghcWithPackages (p: with p; [
-        array base binary comonad containers dlist free mtl parsec QuickCheck
-        semigroups semigroupoids cabal-install
+      /home/phil/PhiledCommon/philedcommon.nix ghc-mod cabal-install hlint
     ]);
 in with pkgs; stdenv.mkDerivation {
   name = "Philed";
-  buildInputs = [ myhaskell ];
+  buildInputs = [ cabal2nix myemacs myhaskell ];
 }
-#TODO: Dependency on which should be made runtime.
