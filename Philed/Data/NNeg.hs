@@ -1,9 +1,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Philed.Data.NNeg (NNeg, N(..)
                         ,isZero, zero, one, suc, pred, predN
-                        ,plus, plusN, sub, subN, times, timesN, abs, extract
+                        ,sub, subN, times, timesN, abs, extract
                         ,fromPos, fromNum, fromWord, fromWord8, fromWord16
                         ,fromWord32, fromWord64
+                        ,nnIntToInteger
                         ,fromN, toN
                         ,SumNNeg(..), ProdNNeg(..)
                         ,length, lengthN, lookup, lookupN) where
@@ -15,6 +16,7 @@ import Data.Functor.Identity
 import Data.List (genericDrop)
 import Data.Maybe
 import Data.Monoid hiding (getSum)
+import Data.Semiring
 import qualified Philed.Data.Pos as Pos
 import qualified Prelude as P
 import Prelude hiding (abs, length, lookup, pred)
@@ -26,9 +28,6 @@ data N = Z | S N deriving (Eq, Ord)
 isZero :: (Eq a, Num a) => NNeg a -> Bool
 isZero (NNeg x) = x == 0
 
-zero :: Num a => NNeg a
-zero = NNeg 0
-
 suc :: Num a => NNeg a -> NNeg a
 suc (NNeg x) = NNeg $ x + 1
 
@@ -38,9 +37,6 @@ pred (NNeg x) = guard (x >= 1) >> pure (NNeg $ x - 1)
 predN :: N -> Maybe N
 predN Z     = Nothing
 predN (S n) = Just n
-
-plus :: Num a => NNeg a -> NNeg a -> NNeg a
-plus (NNeg x) (NNeg y) = NNeg $ x + y
 
 plusN :: N -> N -> N
 plusN m Z     = m
@@ -88,6 +84,9 @@ fromPos p = NNeg (Pos.extract p)
 extract :: Num a => NNeg a -> a
 extract (NNeg x) = x
 
+nnIntToInteger :: NNeg Int -> NNeg Integer
+nnIntToInteger (NNeg x) = NNeg (fromIntegral x)
+
 toN :: Integral a => NNeg a -> N
 toN n = case extract n of
   0 -> Z
@@ -102,9 +101,13 @@ newtype SumNNeg a = SumNNeg { getSum  :: NNeg a }
 newtype SumN      = SumN    { getSumN :: N }
                   deriving (Eq, Ord)
 
-instance Num a => Monoid (SumNNeg a) where
-  mempty                          = SumNNeg zero
-  mappend (SumNNeg n) (SumNNeg m) = SumNNeg (n `plus` m)
+instance Num a => Monoid (NNeg a) where
+  mempty                    = NNeg 0
+  mappend (NNeg m) (NNeg n) = NNeg (m + n)
+
+instance Num a => Semiring (NNeg a) where
+  one               = NNeg 1
+  NNeg x <.> NNeg y = NNeg (x * y)
 
 instance Monoid SumN where
   mempty                    = SumN Z
@@ -144,6 +147,3 @@ instance Arbitrary a => Arbitrary (NNeg a) where
 
 instance CoArbitrary a => CoArbitrary (NNeg a) where
   coarbitrary (NNeg n) = coarbitrary n
-
-one :: Num a => NNeg a
-one = NNeg 1

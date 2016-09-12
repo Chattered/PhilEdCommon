@@ -5,6 +5,7 @@ import Control.Applicative
 import Data.Char
 import Data.List.NonEmpty (NonEmpty(..), toList)
 import Data.Semigroup.Traversable
+import Philed.Data.Monoid
 import qualified Philed.Data.NNeg as N
 import qualified Philed.Data.Pos as P
 import Philed.Data.Semigroup
@@ -15,7 +16,7 @@ many1ne p = (:|) <$> p <*> (many p)
 
 natsToNat :: Num a => [N.NNeg a] -> N.NNeg a
 natsToNat = nsum . zipWith N.times (iterate (N.times (N.abs 10)) (N.abs 1)) . reverse
-  where nsum = foldr N.plus N.zero
+  where nsum = foldr mappend N.zero
 
 parseDigit :: (Integral a, Stream s m Char) => ParsecT s u m (N.NNeg a)
 parseDigit = fmap (N.abs . fromIntegral . digitToInt) digit
