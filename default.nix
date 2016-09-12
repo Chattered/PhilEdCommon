@@ -6,7 +6,7 @@ let
       [ ghc-mod haskellMode magit helm-projectile ];
    myhaskell =
      pkgs.haskellPackages.ghcWithPackages (p: with p; [
-      ghc-mod cabal-install hlint
+      ghc-mod cabal-install hlint (pkgs.haskellPackages.callPackage philedcommon {})
     ]);
 in with pkgs; stdenv.mkDerivation {
   name = "Philed";
