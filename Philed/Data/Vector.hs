@@ -3,8 +3,10 @@ module Philed.Data.Vector (Vec, UnitV, Isometry
                           ,fromUnitVector, normalise
                           ,(+.), (-.), (*.), dot, cross, norm, magnitude
                           ,project, projectUnit, projectK, projectUnitK
-                          ,rot, rot90, reflX, refl
+                          ,rot, rot90, reflX, reflY, refl
                           ,applyIso, applyIsoU) where
+
+import Data.Monoid
 
 newtype UnitV a = UnitV (a,a) deriving (Eq, Show)
 type Vec a = (a,a)
@@ -57,7 +59,7 @@ projectUnit u v = projectUnitK u v *. fromUnitVector u
 normalise :: Floating a => (a,a) -> UnitV a
 normalise v = UnitV (v /. magnitude v)
 
-newtype Isometry a = MatrixIso (a,a,a,a)
+newtype Isometry a = MatrixIso (a,a,a,a) deriving Show
 
 instance Num a =>  Monoid (Isometry a) where
   mempty = MatrixIso (1,0,0,1)
@@ -73,8 +75,17 @@ refl θ = MatrixIso (cos (2*θ), (sin (2*θ)), sin (2*θ), -cos (2*θ))
 rot90 :: Num a => Isometry a
 rot90 = MatrixIso (0, -1, 1, 0)
 
+rot180 :: Num a => Isometry a
+rot180 = rot90 <> rot90
+
+rot270 :: Num a => Isometry a
+rot270 = rot180 <> rot90
+
 reflX :: Num a => Isometry a
 reflX = MatrixIso (1,0,0,-1)
+
+reflY :: Num a => Isometry a
+reflY = MatrixIso (-1,0,0,1)
 
 applyIso :: Num a => Isometry a -> (a,a) -> (a,a)
 applyIso (MatrixIso (a,b,c,d)) (x,y) = (a*x+b*y, c*x+d*y)
