@@ -3,7 +3,7 @@ module Philed.Data.Vector (Vec, UnitV, Isometry
                           ,fromUnitVector, normalise
                           ,(+.), (-.), (*.), dot, cross, norm, magnitude
                           ,project, projectUnit, projectK, projectUnitK
-                          ,rot, rot90, reflX, reflY, refl
+                          ,rot, rot90, rot180, rot270, reflX, reflY, refl
                           ,applyIso, applyIsoU) where
 
 import Data.Monoid
