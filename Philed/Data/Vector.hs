@@ -73,7 +73,7 @@ refl :: Floating a => a -> Isometry a
 refl θ = MatrixIso (cos (2*θ), (sin (2*θ)), sin (2*θ), -cos (2*θ))
 
 rot90 :: Num a => Isometry a
-rot90 = MatrixIso (0, -1, 1, 0)
+rot90 = MatrixIso (0,-1,1,0)
 
 rot180 :: Num a => Isometry a
 rot180 = rot90 <> rot90
