@@ -1,6 +1,7 @@
-{ philedcommon, pkgs ? (import <nixpkgs> {}).pkgs
+{ pkgs ? (import <nixpkgs> {}).pkgs
 }:
 let
+   philedcommon = import ./PhiledCommon.nix;
    myemacs =
      with pkgs.emacsPackages; with pkgs.emacsPackagesNg; pkgs.emacsWithPackages
       [ ghc-mod haskellMode magit helm-projectile ];
