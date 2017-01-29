@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     Philed.Control.Monad, Philed.Control.Monad.Except, Philed.Control.Monad.Record, Philed.Control.Monad.Stream, Philed.Control.Monad.Trans.Free, Philed.Text.Parsec, Philed.Text.PPrint, Philed.Data.NNeg, Philed.Data.UnionFind, Philed.Data.Monoid, Philed.Data.List, Philed.Data.SortedList, Philed.Data.Vector, Philed.Data.Rect, Philed.Data.Pos, Philed.Data.Bag, Philed.Data.SortedListMap, Philed.Data.ListZipper, Philed.Data.Semigroup, Philed.Data.Foldable, Philed.Data.Forest, Philed.Data.Option
+  exposed-modules:     Philed.Control.Monad, Philed.Control.Monad.Except, Philed.Control.Monad.Record, Philed.Control.Monad.Stream, Philed.Control.Monad.Trans.Free, Philed.Text.Parsec, Philed.Text.PPrint, Philed.Data.NNeg, Philed.Data.UnionFind, Philed.Data.Monoid, Philed.Data.List, Philed.Data.SortedList, Philed.Data.Vector, Philed.Data.Rect, Philed.Data.Pos, Philed.Data.Bag, Philed.Data.SortedListMap, Philed.Data.ListZipper, Philed.Data.Semigroup, Philed.Data.Foldable, Philed.Data.Forest, Philed.Data.Option, Philed.Data.Geom.Between
   other-modules:       Philed.Control.MonadExtras, Philed.Control.Monad.ExceptExtras, Philed.Control.Monad.Trans.FreeExtras, Philed.Data.FoldableExtras, Philed.Data.ListExtras, Philed.Data.MonoidExtras, Philed.Data.SemigroupExtras
   -- other-modules:       
   other-extensions:    FunctionalDependencies, MultiParamTypeClasses, GeneralizedNewtypeDeriving, FlexibleInstances, UndecidableInstances, FlexibleContexts, Rank2Types, DeriveFunctor
