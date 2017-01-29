@@ -38,8 +38,8 @@ intersectSegRay (a,b) ray@(Ray rayStart rayDir) =
   let qp = a -. rayStart in
   let x  = qp `cross` r in
   case (rs == 0, x == 0) of
-    (True, True) -> onRay a ray-- || onRay b ray
-                    -- || (a /= b && between (V1 a) (V1 rayStart, V1 b))
+    (True, True) -> onRay a ray -- TODO (?)\|| onRay b ray
+                    -- \|| (a /= b && between (V1 a) (V1 rayStart, V1 b))
     (True, False) -> False
     (False,_)     -> let t = qp `cross` s / rs
                          u = qp `cross` r / rs
