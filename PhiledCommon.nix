@@ -8,7 +8,7 @@ mkDerivation {
   src = fetchFromGitHub {
     owner = "Chattered";
     repo = "PhiledCommon";
-    rev = "master";
+    rev = "1b68fd8c993e9ff1e11a1e4b4bee0598264deb70";
     sha256 = "1jib7wq9f4sw8yr01iiscpm8z2x8pyv21as05pnqd93zmb9gvzf2";
   };
   libraryHaskellDepends = [
