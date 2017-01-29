@@ -9,7 +9,7 @@ mkDerivation {
     owner = "Chattered";
     repo = "PhiledCommon";
     rev = "master";
-    sha256 = "1f4dvnnvbwqa4kqi5fydq6h0g25cf54sffi80xq2dqwcfnh61qnq";
+    sha256 = "1jib7wq9f4sw8yr01iiscpm8z2x8pyv21as05pnqd93zmb9gvzf2";
   };
   libraryHaskellDepends = [
     array base binary comonad containers free mtl parsec QuickCheck
