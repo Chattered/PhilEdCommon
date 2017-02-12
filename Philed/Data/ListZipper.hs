@@ -70,7 +70,7 @@ rightsT (ZipperT lws wx (rw:rws)) =
   let c = ZipperT (wx:lws) rw rws in c : rightsT c
 
 fromNonEmptyT :: NE.NonEmpty (w a)-> [ZipperT w a]
-fromNonEmptyT (x :| xs) = let left = ZipperT [] x xs in rightsT left
+fromNonEmptyT (x :| xs) = let left = ZipperT [] x xs in left : rightsT left
 
 toNonEmptyT :: ZipperT w a -> NE.NonEmpty (w a)
 toNonEmptyT (ZipperT ls x rs) = foldl (flip (<|)) (x :| rs) ls
