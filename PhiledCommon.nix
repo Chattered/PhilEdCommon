@@ -8,8 +8,8 @@ mkDerivation {
   src = fetchFromGitHub {
     owner = "Chattered";
     repo = "PhiledCommon";
-    rev = "1b68fd8c993e9ff1e11a1e4b4bee0598264deb70";
-    sha256 = "1jib7wq9f4sw8yr01iiscpm8z2x8pyv21as05pnqd93zmb9gvzf2";
+    rev = "83a827a061ab2291176ee79c991b9fb1b3924222";
+    sha256 = "08d86rg0qx0p66mxn1wlz5jcpyfyynxafaj6bhsjdssgvlmrskrz";
   };
   libraryHaskellDepends = [
     array base binary comonad containers free mtl parsec QuickCheck
