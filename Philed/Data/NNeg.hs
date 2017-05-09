@@ -1,3 +1,6 @@
+-- This module is a lie
+-- See Pos.hs
+
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Philed.Data.NNeg (NNeg, N(..)
                         ,isZero, zero, one, suc, pred, predN

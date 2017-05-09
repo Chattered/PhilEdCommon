@@ -1,3 +1,7 @@
+-- This module is a lie
+-- > let Just m = fromNum (maxBound :: Int)
+-- > m `plus` one
+
 module Philed.Data.Pos (Pos, P(..)
                        ,isOne, one, suc, pred, predP
                        ,plus, plusP, sub, subP, times, timesP, fromNum, extract
