@@ -34,7 +34,7 @@ onRay :: (Ord a, Num a) => Vec a -> Ray a -> Bool
 onRay x (Ray start p) =
   between (V1 x) (V1 start, V1 p) || between (V1 p) (V1 start, V1 x)
 
-intersectSegRay :: (Fractional a, Ord a) => (Vec a,Vec a) -> Ray a -> Bool
+intersectSegRay :: (Num a, Ord a) => (Vec a, Vec a) -> Ray a -> Bool
 intersectSegRay (a,b) ray@(Ray rayStart rayDir) =
   let p = rayStart +. rayDir
       r = rayDir
@@ -46,9 +46,9 @@ intersectSegRay (a,b) ray@(Ray rayStart rayDir) =
     (True, True) -> onRay a ray -- TODO (?)\|| onRay b ray
                     -- \|| (a /= b && between (V1 a) (V1 rayStart, V1 b))
     (True, False) -> False
-    (False,_)     -> let t = qp `cross` s / rs
-                         u = qp `cross` r / rs
-                     in 0 < t && 0 <= u && u <= 1
+    (False,_)     -> let t = qp `cross` s
+                         u = qp `cross` r
+                     in 0 < t * rs && 0 <= u && u <= rs
 
 -- | Non-zero vectors
 newtype V2 a = V2 { getVec2 :: Vec a } deriving (Arbitrary, Eq, Show)
@@ -59,7 +59,7 @@ vec2 (x,y) = pure (V2 (x,y))
 
 -- | One non-zero vector lies between two others if it lies in the angle formed by
 -- their rays.
-instance (Fractional a, Ord a) => Between (V2 a) where
+instance (Num a, Ord a) => Between (V2 a) where
   between (V2 (x,y)) (V2 (ax,ay), V2 (bx,by)) =
     intersectSegRay ((ax,ay),(bx,by)) (Ray (0,0) (x,y))
 
