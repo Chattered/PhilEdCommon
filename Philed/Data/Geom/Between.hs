@@ -1,5 +1,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
+-- | "Betweenness" is a three-place relation which can be used to define intervals of
+-- a space, without requiring there be any linear ordering of points in that
+-- space. Totally ordered spaces give rise to such a relation (see V1), as do
+-- two-dimensional vectors, interpreted as angles (see V2).
+
 module Philed.Data.Geom.Between (Ordered, V1(..), V2, vec2, getVec2,
                                  getSegments, singleton, isOrdered) where
 
