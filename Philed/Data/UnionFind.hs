@@ -15,24 +15,24 @@ newtype UF s i m a = UF { unUF' :: ReaderT (STArray s i (Cell i)) m a }
                    deriving (Functor, Applicative
                             ,MonadReader (STArray s i (Cell i)), Monad, MonadTrans)
 
-normal :: Ix i => i -> UF s i (ST s) i
-normal i = do
+normal' :: Ix i => i -> UF s i (ST s) i
+normal' i = do
   uf <- ask
   c  <- lift (readArray uf i)
   case c of
-    Rewrite j -> do j' <- normal j
+    Rewrite j -> do j' <- normal' j
                     lift (writeArray uf i (Rewrite j'))
                     return j'
     Normal j  -> return j
 
 equiv' :: Ix i => i -> i -> UF s i (ST s) Bool
-equiv' = liftM2 (==) `on` normal
+equiv' = liftM2 (==) `on` normal'
 
 union' :: Ix i => i -> i -> UF s i (ST s) ()
 union' i j = do
   uf <- ask
-  i' <- normal i
-  j' <- normal j
+  i' <- normal' i
+  j' <- normal' j
   if i' == j' then return () else lift (writeArray uf i' (Rewrite j'))
 
 runUF' :: Ix i => (forall s. UF s i (ST s) a) -> (i,i) -> a
@@ -42,6 +42,9 @@ runUF' uf bounds = runST (do
 -- Make types look a bit nicer
 newtype UnionFind s i a = UnionFind { unUnionFind :: (UF s i (ST s) a) }
                         deriving (Functor, Applicative, Monad)
+
+normal :: Ix i => i -> UnionFind s i i
+normal = UnionFind . normal'
 
 equiv :: Ix i => i -> i -> UnionFind s i Bool
 equiv s t = UnionFind (equiv' s t)
