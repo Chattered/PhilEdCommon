@@ -1,6 +1,6 @@
 {-# LANGUAGE Rank2Types, GeneralizedNewtypeDeriving #-}
 
-module Philed.Data.UnionFind (equiv,union,runUF,UnionFind) where
+module Philed.Data.UnionFind (equiv,union,runUF,normal,UnionFind) where
 
 import Control.Applicative
 import Control.Monad.Reader
