@@ -5,7 +5,5 @@
 (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (require 'magit)
-(require 'ghc)
 (require 'helm-config)
 (require 'helm-projectile)
-
