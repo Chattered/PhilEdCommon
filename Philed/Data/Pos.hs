@@ -82,13 +82,17 @@ instance Semigroup SumP where
 newtype ProdPos a = ProdPos { getProd  :: Pos a }
 newtype ProdN     = ProdN   { getProdN :: P }
 
+instance Num a => Semigroup (ProdPos a) where
+  ProdPos n <> ProdPos m = ProdPos (n `times` m)
+
 instance Num a => Monoid (ProdPos a) where
   mempty                          = ProdPos one
-  mappend (ProdPos n) (ProdPos m) = ProdPos (n `times` m)
+
+instance Semigroup ProdN where
+  ProdN m <> ProdN n = ProdN (m `timesP` n)
 
 instance Monoid ProdN where
   mempty                      = ProdN SZ
-  mappend (ProdN m) (ProdN n) = ProdN (m `timesP` n)
 
 lengthP :: Foldable1 f => f a -> P
 lengthP = getSumP . foldMap1 (const $ SumP SZ)

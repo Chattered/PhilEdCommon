@@ -6,9 +6,11 @@ import Data.String
 
 newtype PPrint = PPrint { runPP :: Int -> String }
 
+instance Semigroup PPrint where
+  l <> r = PPrint (\i -> runPP l i ++ runPP r i)
+
 instance Monoid PPrint where
   mempty      = PPrint (const "")
-  mappend l r = PPrint (\i -> runPP l i ++ runPP r i)
 
 instance IsString PPrint where
   fromString str = PPrint (const str)

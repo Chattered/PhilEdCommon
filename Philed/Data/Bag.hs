@@ -12,9 +12,11 @@ import Prelude hiding (all, filter)
 
 newtype Bag a = Bag (M.Map a (Pos Int)) deriving (Eq,Ord)
 
+instance Ord a => Semigroup (Bag a) where
+  Bag m1 <> Bag m2 = Bag (M.unionWith plus m1 m2)
+
 instance Ord a => Monoid (Bag a) where
   mempty = Bag M.empty
-  mappend (Bag m1) (Bag m2) = Bag (M.unionWith plus m1 m2)
 
 insert :: Ord a => a -> Bag a -> Bag a
 insert x (Bag m) = Bag (M.insertWith plus x one m)

@@ -94,9 +94,8 @@ extractDir (Ordered [])      = Nothing
 extractDir (Ordered [(a,b)]) = if a == b then Nothing else Just (a,b)
 extractDir (Ordered ((a,_):(_,b):_)) = Just (a,b)
 
-instance (Eq a, Between a) => Monoid (Ordered a) where
-  mempty = Ordered []
-  mappend xs ys =
+instance (Eq a, Between a) => Semigroup (Ordered a) where
+  xs <> ys =
     Ordered (case (extractDir xs, extractDir ys) of
                (Nothing, Nothing) -> nub (getSegments xs ++ getSegments ys)
                (Nothing, Just dir) -> union dir (getSegments xs) (getSegments ys)
@@ -138,6 +137,9 @@ instance (Eq a, Between a) => Monoid (Ordered a) where
                                           un abs ((a,d) : cds')
                                         else (a,b) : un abs' cds
                   un = union dir
+
+instance (Eq a, Between a) => Monoid (Ordered a) where
+  mempty = Ordered []
 
 inOrdered :: Between a => Ordered a -> a -> Bool
 inOrdered (Ordered xs) x = or (map (between x) xs)

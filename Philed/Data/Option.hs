@@ -15,7 +15,7 @@ import Data.Traversable
 newtype Option a = Option { runOption :: Maybe a }
                  deriving (Eq, Monad, Functor, Ord, Read, Show, MonadFix
                           ,Alternative, Applicative, Foldable, Traversable
-                          ,Monoid, MonadPlus)
+                          ,Semigroup, Monoid, MonadPlus)
 
 instance MonadError () Option where
   throwError () = Option Nothing

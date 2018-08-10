@@ -44,9 +44,11 @@ andTry f g x = f x >>= tryM g
 
 newtype Try e m a = Try { runTry :: a -> m a }
 
+instance MonadError e m => Semigroup (Try e m a) where
+  Try f <> Try g = Try (f `andTry` g)
+
 instance MonadError e m => Monoid (Try e m a) where
   mempty                  = Try return
-  mappend (Try f) (Try g) = Try (f `andTry` g)
 
 spinM :: MonadError e m => (a -> m a) -> a -> m a
 spinM = runTry . multiplyInf . Try

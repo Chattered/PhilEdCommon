@@ -61,10 +61,12 @@ normalise v = UnitV (v /. magnitude v)
 
 newtype Isometry a = MatrixIso (a,a,a,a) deriving Show
 
-instance Num a =>  Monoid (Isometry a) where
-  mempty = MatrixIso (1,0,0,1)
-  mappend (MatrixIso (a,b,c,d)) (MatrixIso (e,f,g,h)) =
+instance Num a => Semigroup (Isometry a) where
+  MatrixIso (a,b,c,d) <> MatrixIso (e,f,g,h) =
     MatrixIso (a*e+b*g, a*f+b*h, c*e+d*g, c*f+d*h)
+
+instance Num a => Monoid (Isometry a) where
+  mempty = MatrixIso (1,0,0,1)
 
 rot :: Floating a => a -> Isometry a
 rot θ = MatrixIso (cos θ, -(sin θ), sin θ, cos θ)

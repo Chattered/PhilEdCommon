@@ -104,28 +104,36 @@ newtype SumNNeg a = SumNNeg { getSum  :: NNeg a }
 newtype SumN      = SumN    { getSumN :: N }
                   deriving (Eq, Ord)
 
+instance Num a => Semigroup (NNeg a) where
+  NNeg m <> NNeg n = NNeg (m + n)
+
 instance Num a => Monoid (NNeg a) where
   mempty                    = NNeg 0
-  mappend (NNeg m) (NNeg n) = NNeg (m + n)
 
 instance Num a => Semiring (NNeg a) where
   one               = NNeg 1
   NNeg x <.> NNeg y = NNeg (x * y)
 
+instance Semigroup SumN where
+  SumN m <> SumN n = SumN (m `plusN` n)
+
 instance Monoid SumN where
   mempty                    = SumN Z
-  mappend (SumN m) (SumN n) = SumN (m `plusN` n)
 
 newtype ProdNNeg a = ProdNNeg { getProd  :: NNeg a }
 newtype ProdN      = ProdN    { getProdN :: N }
 
+instance Num a => Semigroup (ProdNNeg a) where
+  ProdNNeg n <> ProdNNeg m = ProdNNeg (n `times` m)
+
 instance Num a => Monoid (ProdNNeg a) where
   mempty                            = ProdNNeg zero
-  mappend (ProdNNeg n) (ProdNNeg m) = ProdNNeg (n `times` m)
+
+instance Semigroup ProdN where
+  ProdN m <> ProdN n = ProdN (m `timesN` n)
 
 instance Monoid ProdN where
   mempty                      = ProdN Z
-  mappend (ProdN m) (ProdN n) = ProdN (m `timesN` n)
 
 lengthN :: Foldable f => f a -> N
 lengthN = getSumN . foldMap (const $ SumN (S Z))
